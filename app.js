@@ -46,6 +46,7 @@ let state = {
   generators: {},
   upgradesOwned: [],
   achievementsUnlocked: [],
+  achievementUnlockTimes: {},
 };
 
 function earnNotes(amount) {
@@ -86,6 +87,152 @@ function totalCps() {
 
 function perClickValue() {
   return state.perClick * state.clickMult;
+}
+
+/* ---------- 購入プレビュー用ツールチップ ---------- */
+
+function formatPaybackTime(seconds) {
+  if (!isFinite(seconds) || seconds <= 0) return "—";
+  return formatPlayTime(Math.ceil(seconds));
+}
+
+function cpsEfficiencyRow(cost, diff) {
+  if (diff <= 0) {
+    return `<div class="tooltip-row tooltip-efficiency"><span>⏱ 回収時間</span><span>—</span></div>`;
+  }
+  const paybackSeconds = cost / diff;
+  return `<div class="tooltip-row tooltip-efficiency"><span>⏱ 回収時間</span><span>${formatPaybackTime(paybackSeconds)}</span></div>`;
+}
+
+function unitEfficiencyRow(cost, diff) {
+  if (diff <= 0) {
+    return `<div class="tooltip-row tooltip-efficiency"><span>💡 コスト効率</span><span>—</span></div>`;
+  }
+  const perUnitCost = cost / diff;
+  return `<div class="tooltip-row tooltip-efficiency"><span>💡 コスト効率</span><span>${formatNumber(perUnitCost)} ノーツ/+1</span></div>`;
+}
+
+function affordabilityRow(cost) {
+  if (state.notesCount >= cost) return "";
+  const cps = totalCps();
+  const needed = cost - state.notesCount;
+  if (cps <= 0) {
+    return `<div class="tooltip-row tooltip-wait"><span>⏳ 購入まで</span><span>収入がないため不明</span></div>`;
+  }
+  const secondsNeeded = needed / cps;
+  return `<div class="tooltip-row tooltip-wait"><span>⏳ 購入まで</span><span>あと${formatPaybackTime(secondsNeeded)}</span></div>`;
+}
+
+function generatorTooltipHtml(def) {
+  const g = state.generators[def.id];
+  const cost = generatorCost(def, g.level);
+  const currentContribution = def.cps * g.level * g.mult * state.globalMult;
+  const nextContribution = def.cps * (g.level + 1) * g.mult * state.globalMult;
+  const diff = nextContribution - currentContribution;
+
+  return `
+    <div class="tooltip-title">${def.name} を購入 (Lv.${g.level} → Lv.${g.level + 1})</div>
+    <div class="tooltip-row"><span>現在の生産量</span><span>${formatNumber(currentContribution)}/秒</span></div>
+    <div class="tooltip-row"><span>購入後の生産量</span><span>${formatNumber(nextContribution)}/秒</span></div>
+    <div class="tooltip-row tooltip-highlight"><span>増加量</span><span>+${formatNumber(diff)}/秒</span></div>
+    <div class="tooltip-row"><span>コスト</span><span>${formatNumber(cost)} ノーツ</span></div>
+    ${affordabilityRow(cost)}
+    ${cpsEfficiencyRow(cost, diff)}
+  `;
+}
+
+function upgradeTooltipHtml(def) {
+  let rows = "";
+  let diff = 0;
+  let isCps = true;
+
+  if (def.type === "clickMult") {
+    const current = perClickValue();
+    const next = current * def.value;
+    diff = next - current;
+    isCps = false;
+    rows = `
+      <div class="tooltip-row"><span>現在のクリック獲得量</span><span>+${formatNumber(current)}</span></div>
+      <div class="tooltip-row"><span>購入後のクリック獲得量</span><span>+${formatNumber(next)}</span></div>
+      <div class="tooltip-row tooltip-highlight"><span>増加量</span><span>+${formatNumber(diff)}</span></div>
+    `;
+  } else if (def.type === "globalMult") {
+    const current = totalCps();
+    const next = current * def.value;
+    diff = next - current;
+    rows = `
+      <div class="tooltip-row"><span>現在の毎秒獲得量（全体）</span><span>${formatNumber(current)}/秒</span></div>
+      <div class="tooltip-row"><span>購入後の毎秒獲得量（全体）</span><span>${formatNumber(next)}/秒</span></div>
+      <div class="tooltip-row tooltip-highlight"><span>増加量</span><span>+${formatNumber(diff)}/秒</span></div>
+    `;
+  } else if (def.type === "targetMult") {
+    const targetDef = GENERATOR_DEFS.find(d => d.id === def.target);
+    const g = state.generators[def.target];
+    const current = targetDef.cps * g.level * g.mult * state.globalMult;
+    const next = targetDef.cps * g.level * (g.mult * def.value) * state.globalMult;
+    diff = next - current;
+    rows = `
+      <div class="tooltip-row"><span>${targetDef.name}の現在の生産量</span><span>${formatNumber(current)}/秒</span></div>
+      <div class="tooltip-row"><span>購入後の生産量</span><span>${formatNumber(next)}/秒</span></div>
+      <div class="tooltip-row tooltip-highlight"><span>増加量</span><span>+${formatNumber(diff)}/秒</span></div>
+    `;
+  }
+
+  const effRow = isCps ? cpsEfficiencyRow(def.cost, diff) : unitEfficiencyRow(def.cost, diff);
+
+  return `
+    <div class="tooltip-title">${def.name} を購入</div>
+    ${rows}
+    <div class="tooltip-row"><span>コスト</span><span>${formatNumber(def.cost)} ノーツ</span></div>
+    ${affordabilityRow(def.cost)}
+    ${effRow}
+  `;
+}
+
+function positionTooltip(x, y) {
+  const offset = 16;
+  const margin = 8;
+  let left = x + offset;
+  let top = y + offset;
+  const rect = itemTooltip.getBoundingClientRect();
+  if (left + rect.width > window.innerWidth - margin) {
+    left = x - rect.width - offset;
+  }
+  if (top + rect.height > window.innerHeight - margin) {
+    top = y - rect.height - offset;
+  }
+  itemTooltip.style.left = Math.max(margin, left) + "px";
+  itemTooltip.style.top = Math.max(margin, top) + "px";
+}
+
+let hoveredTooltip = null; // { kind: 'generator' | 'upgrade', def, x, y }
+
+function showGeneratorTooltip(def, x, y) {
+  hoveredTooltip = { kind: "generator", def, x, y };
+  itemTooltip.innerHTML = generatorTooltipHtml(def);
+  itemTooltip.style.display = "block";
+  positionTooltip(x, y);
+}
+
+function showUpgradeTooltip(def, x, y) {
+  hoveredTooltip = { kind: "upgrade", def, x, y };
+  itemTooltip.innerHTML = upgradeTooltipHtml(def);
+  itemTooltip.style.display = "block";
+  positionTooltip(x, y);
+}
+
+function hideItemTooltip() {
+  hoveredTooltip = null;
+  itemTooltip.style.display = "none";
+}
+
+function refreshItemTooltip() {
+  if (!hoveredTooltip) return;
+  if (hoveredTooltip.kind === "generator") {
+    showGeneratorTooltip(hoveredTooltip.def, hoveredTooltip.x, hoveredTooltip.y);
+  } else if (hoveredTooltip.kind === "upgrade") {
+    showUpgradeTooltip(hoveredTooltip.def, hoveredTooltip.x, hoveredTooltip.y);
+  }
 }
 
 function isUnlocked(unlockConditions) {
@@ -130,6 +277,7 @@ const statGeneratorTotal = document.getElementById("statGeneratorTotal");
 const ownedUpgradeList = document.getElementById("ownedUpgradeList");
 const achievementList = document.getElementById("achievementList");
 const achievementToastContainer = document.getElementById("achievementToastContainer");
+const itemTooltip = document.getElementById("itemTooltip");
 
 function renderTopBar() {
   countDisplay.textContent = formatNumber(state.notesCount) + " ノーツ";
@@ -145,6 +293,7 @@ function renderGenerators() {
   const signature = visibleDefs.map(d => d.id).join(",") + "|" + lockedCount;
 
   if (signature !== lastGeneratorSignature) {
+    hideItemTooltip();
     generatorList.innerHTML = "";
     visibleDefs.forEach(def => {
       const el = document.createElement("div");
@@ -159,6 +308,9 @@ function renderGenerators() {
         <div class="item-cost"></div>
       `;
       el.addEventListener("click", () => buyGenerator(def));
+      el.addEventListener("mouseenter", (e) => showGeneratorTooltip(def, e.clientX, e.clientY));
+      el.addEventListener("mousemove", (e) => showGeneratorTooltip(def, e.clientX, e.clientY));
+      el.addEventListener("mouseleave", hideItemTooltip);
       generatorList.appendChild(el);
     });
     if (lockedCount > 0) {
@@ -191,6 +343,7 @@ function renderUpgrades() {
   const signature = visibleDefs.map(d => d.id).join(",") + "|" + lockedCount;
 
   if (signature !== lastUpgradeSignature) {
+    hideItemTooltip();
     upgradeList.innerHTML = "";
 
     if (visibleDefs.length === 0 && lockedCount === 0) {
@@ -209,6 +362,9 @@ function renderUpgrades() {
           <div class="item-cost">${formatNumber(def.cost)}</div>
         `;
         el.addEventListener("click", () => buyUpgrade(def));
+        el.addEventListener("mouseenter", (e) => showUpgradeTooltip(def, e.clientX, e.clientY));
+        el.addEventListener("mousemove", (e) => showUpgradeTooltip(def, e.clientX, e.clientY));
+        el.addEventListener("mouseleave", hideItemTooltip);
         upgradeList.appendChild(el);
       });
       if (lockedCount > 0) {
@@ -278,6 +434,10 @@ function renderAchievements() {
     state.achievementsUnlocked.forEach(id => {
       const def = ACHIEVEMENT_DEFS.find(a => a.id === id);
       if (!def) return;
+      const unlockedAt = state.achievementUnlockTimes[id];
+      const timeText = unlockedAt !== undefined
+        ? `プレイ時間 ${formatPlayTime(unlockedAt)} で解除`
+        : "";
       const el = document.createElement("div");
       el.className = "achievement-row";
       el.innerHTML = `
@@ -285,6 +445,7 @@ function renderAchievements() {
         <div class="item-main">
           <div class="item-name">${def.name}</div>
           <div class="item-desc">${def.desc}</div>
+          ${timeText ? `<div class="achievement-time">⏰ ${timeText}</div>` : ""}
         </div>
       `;
       achievementList.appendChild(el);
@@ -304,6 +465,7 @@ function checkAchievements() {
     if (state.achievementsUnlocked.includes(def.id)) return;
     if (isUnlocked(def.unlock)) {
       state.achievementsUnlocked.push(def.id);
+      state.achievementUnlockTimes[def.id] = state.playTimeSeconds;
       announceAchievement(def);
     }
   });
@@ -330,6 +492,7 @@ function renderAll() {
   renderUpgrades();
   renderStats();
   renderAchievements();
+  refreshItemTooltip();
 }
 
 function buyGenerator(def) {
@@ -368,6 +531,7 @@ popkunBtn.addEventListener("click", (e) => {
   renderTopBar();
   renderGenerators();
   renderUpgrades();
+  refreshItemTooltip();
 });
 
 function spawnFloatText(text, x, y) {
@@ -440,6 +604,7 @@ async function loadGame() {
       state.globalMult = loaded.globalMult ?? 1;
       state.upgradesOwned = loaded.upgradesOwned ?? [];
       state.achievementsUnlocked = loaded.achievementsUnlocked ?? [];
+      state.achievementUnlockTimes = loaded.achievementUnlockTimes ?? {};
       GENERATOR_DEFS.forEach(def => {
         if (loaded.generators && loaded.generators[def.id]) {
           const saved = loaded.generators[def.id];
@@ -474,6 +639,7 @@ document.getElementById("resetBtn").addEventListener("click", async () => {
   state.globalMult = 1;
   state.upgradesOwned = [];
   state.achievementsUnlocked = [];
+  state.achievementUnlockTimes = {};
   GENERATOR_DEFS.forEach(def => {
     state.generators[def.id] = { level: 0, mult: 1 };
   });
