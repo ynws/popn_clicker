@@ -11,28 +11,60 @@
    ========================================================= */
 
 const GENERATOR_DEFS = [
-  { id: "pop-kun", name: "ポップ君", icon: "🎵", iconSrc: "assets/characters/pop-kun.svg", desc: "ノーツを1つ増やしてくれる", baseCost: 15, growth: 1.15, cps: 0.1, unlock: [] },
-  { id: "mimi", name: "ミミちゃん", icon: "🌈", iconSrc: "assets/characters/mimi.svg", desc: "キラキラな声援でノーツを増やす", baseCost: 100, growth: 1.15, cps: 1, unlock: [{ type: "generatorLevel", target: "pop-kun", value: 1 }] },
-  { id: "riki", name: "リキ", icon: "⚡", iconSrc: "assets/characters/riki.svg", desc: "ビートに乗ってノーツを加速する", baseCost: 1100, growth: 1.15, cps: 8, unlock: [{ type: "generatorLevel", target: "mimi", value: 1 }] },
-  { id: "nora", name: "ノラ", icon: "✨", iconSrc: "assets/characters/nora.svg", desc: "ネオンのステージでノーツを招集する", baseCost: 12000, growth: 1.15, cps: 47, unlock: [{ type: "generatorLevel", target: "riki", value: 1 }] },
-  { id: "bomi", name: "ボミ", icon: "🎤", iconSrc: "assets/characters/bomi.svg", desc: "大音量のコールでノーツを巻き込む", baseCost: 130000, growth: 1.15, cps: 260, unlock: [{ type: "generatorLevel", target: "nora", value: 1 }] },
+  { id:"g1", name:"ミミ", iconSrc:"icon/mimi.png", desc:"ミミちゃんが応援してくれるよ", baseCost:12, growth:1.13, cps:0.12, unlock:[] },
+  { id:"g2", name:"ニャミ", iconSrc:"icon/nyami.png", desc:"ニャミちゃんが一緒にノーツを増やしてくれるよ", baseCost:100, growth:1.14, cps:1, unlock:[ {type:"generatorLevel",target:"g1",value:5} ] },
+  { id:"g3", name:"ポエット", iconSrc:"icon/poet.png", desc:"ポエットちゃんが成長しながらお手伝いしてくれるよ", baseCost:1000, growth:1.14, cps:7, unlock:[ {type:"generatorLevel",target:"g2",value:5} ] },
+  { id:"g4", name:"ちぇるみん", iconSrc:"icon/chermin.png", desc:"ちぇるみんが見守ってくれるよ。だからやさしく見守ってあげてね", baseCost:12000, growth:1.14, cps:50, unlock:[ {type:"generatorLevel",target:"g3",value:5} ] },
+  { id:"g5", name:"スペース🪐マコ", iconSrc:"icon/mako.png", desc:"マコちゃんが魔法の力でサポートしてくれるよ", baseCost:140000, growth:1.14, cps:400, unlock:[ {type:"generatorLevel",target:"g4",value:5} ] },
+  { id:"g6", name:"ニア", iconSrc:"icon/nia.png", desc:"ニアちゃんが逃げずに助けてくれるよ", baseCost:1600000, growth:1.14, cps:3000, unlock:[ {type:"generatorLevel",target:"g5",value:5} ] },
+  { id:"g7", name:"Σ", iconSrc:"icon/sigma.png", desc:"シグマ様が素数の世界からちょっとだけ手助けしてくれるよ", baseCost: 17999927, growth:1.15, cps:29989, unlock:[ {type:"generatorLevel",target:"g6",value:5} ] },
 ];
 
 const UPGRADE_DEFS = [
-  { id: "beat-boost", name: "ビートブースト", icon: "💥", iconSrc: "assets/characters/pop-kun.svg", desc: "クリック獲得量が2倍になる", cost: 100, type: "clickMult", value: 2, unlock: [{ type: "totalNotesCount", value: 50 }] },
-  { id: "stage-up", name: "ステージアップ", icon: "🚀", iconSrc: "assets/characters/mimi.svg", desc: "ポップ君のレベルが2倍になる", cost: 200, type: "targetMult", target: "pop-kun", value: 2, unlock: [{ type: "generatorLevel", target: "pop-kun", value: 5 }] },
-  { id: "groove", name: "グルーヴ強化", icon: "🎶", iconSrc: "assets/characters/riki.svg", desc: "ミミちゃんの生産量が2倍になる", cost: 1000, type: "targetMult", target: "mimi", value: 2, unlock: [{ type: "generatorLevel", target: "mimi", value: 5 }] },
-  { id: "party-mode", name: "パーティーモード", icon: "🎉", iconSrc: "assets/characters/nora.svg", desc: "全キャラクターの生産量が2倍になる", cost: 50000, type: "globalMult", value: 2, unlock: [{ type: "totalNotesCount", value: 10000 }] },
-  { id: "combo-master", name: "コンボマスター", icon: "🖱️", iconSrc: "assets/characters/bomi.svg", desc: "クリック獲得量がさらに2倍になる", cost: 500, type: "clickMult", value: 2, unlock: [{ type: "clickCount", value: 100 }] },
+  { id:"click1", name:"ポップ君を叩け～♪", iconSrc: "icon/minipop.png", desc: "クリック獲得量が2倍になるよ！", cost:99, type:"clickMult", value:2, unlock:[ {type:"clickCount",value:50} ] },
+  { id:"click2", name:"3・2・1・プーッシュ！", iconSrc: "icon/minipop.png", desc: "クリック獲得量が3倍になるよ！", cost:500, type:"clickMult", value:3, unlock:[ {type:"clickCount",value:300} ] },
+  { id:"click3", name:"ゲリラのように落ちてくる", iconSrc: "icon/minipop.png", desc: "全部まとめて ぱぱっと連打。クリック獲得量が4倍になるよ！", cost:4000, type:"clickMult", value:4, unlock:[ {type:"clickCount",value:700} ] },
+  { id: "all1", name: "パーティーのはじまり", iconSrc: "icon/minipop.png", desc: "ポップンパーティでみんな大はしゃぎ！全員の能力が2倍になるよ！", cost: 50000, type: "globalMult", value: 2, unlock: [{ type: "totalNotesCount", value: 50000 }] },
+
+  { id:"g1_10", name:"うさぎグッズ", iconSrc: "icon/mimi.png", desc: "お気に入りのグッズを身に着けて、ミミちゃんの能力が3倍になるよ", cost:300, type:"targetMult", target:"g1", value:3, unlock:[ {type:"generatorLevel",target:"g1",value:10} ] },
+  { id:"g1_20", name:"丸い蛍光灯", iconSrc: "icon/mimi.png", desc: "頭につけると無表情になっちゃうけど、ミミちゃんの能力が3倍になるよ", cost:1800, type:"targetMult", target:"g1", value:3, unlock:[ {type:"generatorLevel",target:"g1",value:20} ] },
+  { id:"g1_42", name:"風車とアンテナ", iconSrc: "icon/mimi.png", desc: "不思議な夢を見たミミちゃん。起きたら能力が10倍になってたよ", cost:20000, type:"targetMult", target:"g1", value:10, unlock:[ {type:"generatorLevel",target:"g1",value:42} ] },
+
+  { id:"g2_10", name:"ジェットコースター", iconSrc: "icon/nyami.png", desc: "スリル満点！ニャミちゃんの能力が2倍になるよ", cost:1500, type:"targetMult", target:"g2", value:2, unlock:[ {type:"generatorLevel",target:"g2",value:10} ] },
+  { id:"g2_20", name:"懐中時計", iconSrc: "icon/nyami.png", desc: "お気に入りのアイテムでニャミちゃんの能力が3倍になるよ", cost:9000, type:"targetMult", target:"g2", value:3, unlock:[ {type:"generatorLevel",target:"g2",value:20} ] },
+  { id:"g2_m30", name:"ミミちゃんの応援", iconSrc: "icon/mimi.png", desc: "ミミちゃんからの応援でニャミちゃんの能力が2倍になるよ", cost:15000, type:"targetMult", target:"g2", value:3, unlock:[ {type:"generatorLevel",target:"g1",value:30} ] },
+
+  { id:"g3_5", name:"大きな安全ピン", iconSrc: "icon/poet.png", desc: "見習い天使の必需品。ポエットちゃんの能力が2倍になるよ", cost:15000, type:"targetMult", target:"g3", value:2, unlock:[ {type:"generatorLevel",target:"g3",value:5} ] },
+  { id:"g3_10", name:"魚の一家", iconSrc: "icon/poet.png", desc: "加藤さん一家の協力でポエットちゃんの能力が2倍になるよ", cost:50000, type:"targetMult", target:"g3", value:2, unlock:[ {type:"generatorLevel",target:"g3",value:10} ] },
+  { id:"g3_15", name:"シスター服", iconSrc: "icon/poet.png", desc: "不思議な力でポエットちゃんの能力が2倍になるよ", cost:100000, type:"targetMult", target:"g3", value:2, unlock:[ {type:"generatorLevel",target:"g3",value:15} ] },
+  { id:"g3_20", name:"金色のラッパ", iconSrc: "icon/poet.png", desc: "いつかママみたいな天使に！ポエットちゃんの能力が3倍になるよ", cost:150000, type:"targetMult", target:"g3", value:3, unlock:[ {type:"generatorLevel",target:"g3",value:20} ] },
+
+  { id:"g4_10", name:"あまいおくすり", iconSrc: "icon/chermin.png", desc: "真っ暗な夜にとけこんで、ちぇるみんの能力が2倍になるよ", cost:150000, type:"targetMult", target:"g4", value:2, unlock:[ {type:"generatorLevel",target:"g4",value:10} ] },
+  { id:"g4_20", name:"まっぷたツートンソウル", iconSrc: "icon/chermin.png", desc: "運命の相手が見つかって、ちぇるみんの能力が5倍になるよ", cost:900000, type:"targetMult", target:"g4", value:5, unlock:[ {type:"generatorLevel",target:"g4",value:20} ] },
+
+  { id:"g5_10", name:"テクニカルマイコンパクト", iconSrc: "icon/mako.png", desc: "変身アイテムでスペース🪐マコの能力が3倍になるよ", cost:1500000, type:"targetMult", target:"g5", value:3, unlock:[ {type:"generatorLevel",target:"g5",value:10} ] },
+  { id:"g5_20", name:"キング様からの応援", iconSrc: "icon/mako.png", desc: "憧れの人からの応援でスペース🪐マコの能力が5倍になるよ", cost:9000000, type:"targetMult", target:"g5", value:5, unlock:[ {type:"generatorLevel",target:"g5",value:20} ] },
+
+  { id:"g6_10", name:"コスプレ衣装", iconSrc: "icon/nia.png", desc: "こっそり着替えてニアちゃんの能力が3倍になるよ", cost:15000000, type:"targetMult", target:"g6", value:3, unlock:[ {type:"generatorLevel",target:"g6",value:10} ] },
+  { id:"g6_20", name:"暗くて狭い部屋", iconSrc: "icon/nia.png", desc: "落ち着く環境でニアちゃんの能力が6倍になるよ", cost:90000000, type:"targetMult", target:"g6", value:6, unlock:[ {type:"generatorLevel",target:"g6",value:20} ] },
+
+  { id:"g8_7", name:"ネクタル", iconSrc: "icon/sigma.png", desc: "神々のためのお酒。シグマ様の能力が3倍になるよ", cost:150000001, type:"targetMult", target:"g7", value:3, unlock:[ {type:"generatorLevel",target:"g7",value:7} ] },
+  { id:"g7_17", name:"シグマ様親衛隊", iconSrc: "icon/sigma.png", desc: "リソスとその仲間の力で、シグマ様の能力が7倍になるよ", cost:900000011, type:"targetMult", target:"g7", value:7, unlock:[ {type:"generatorLevel",target:"g7",value:17} ] },
 ];
 
 const ACHIEVEMENT_DEFS = [
-  { id: "first_click", name: "はじめての一拍", icon: "👆", iconSrc: "assets/characters/pop-kun.svg", desc: "はじめてポップ君をクリックしてノーツを獲得する", unlock: [{ type: "clickCount", value: 1 }] },
-  { id: "click_100", name: "100コンボ", icon: "🖱️", iconSrc: "assets/characters/mimi.svg", desc: "ポップ君を100回クリックしてノーツを集める", unlock: [{ type: "clickCount", value: 100 }] },
-  { id: "earn_1000", name: "ポップ君大集合", icon: "🎵", iconSrc: "assets/characters/riki.svg", desc: "累計で1,000ノーツを獲得する", unlock: [{ type: "totalNotesCount", value: 1000 }] },
-  { id: "first_generator", name: "キャラクター参戦", icon: "🌈", iconSrc: "assets/characters/mimi.svg", desc: "はじめてキャラクターを呼んでノーツを増やす", unlock: [{ type: "generatorLevel", target: "pop-kun", value: 1 }] },
-  { id: "first_upgrade", name: "レベルアップの予感", icon: "✨", iconSrc: "assets/characters/nora.svg", desc: "はじめてキャラクターを強化してノーツを増やす", unlock: [{ type: "upgradesOwnedCount", value: 1 }] },
-  { id: "playtime_10min", name: "ステージ長時間", icon: "⏰", iconSrc: "assets/characters/bomi.svg", desc: "累計10分間プレイする", unlock: [{ type: "playTimeSeconds", value: 600 }] },
+  { id: "first_click", name: "はじめの一歩", iconSrc: "icon/minipop.png", desc: "はじめてポップ君をクリックする", unlock: [{ type: "clickCount", value: 1 }] },
+  { id: "click_100", name: "100コンボ", iconSrc: "icon/minipop.png", desc: "ポップ君を100回クリックする", unlock: [{ type: "clickCount", value: 100 }] },
+  { id: "click_1025", name: "準辛ゲージ", iconSrc: "icon/minipop.png", desc: "ポップ君を1025回クリックする", unlock: [{ type: "clickCount", value: 1025 }] },
+  { id: "click_1537", name: "これが辛ゲージです", iconSrc: "icon/minipop.png", desc: "ポップ君を1537回クリックする", unlock: [{ type: "clickCount", value: 1537 }] },
+  { id: "earn_1000", name: "ポップ君大集合", iconSrc: "icon/minipop.png", desc: "累計で1000ノーツを獲得する", unlock: [{ type: "totalNotesCount", value: 1000 }] },
+  { id: "earn_6573", name: "トイサイダー村", iconSrc: "icon/minipop.png", desc: "累計で6573ノーツを獲得する", unlock: [{ type: "totalNotesCount", value: 6573 }] },
+  { id: "earn_50all", name: "Lv50全ノーツ相当", iconSrc: "icon/minipop.png", desc: "(THX 4まで全26譜面)累計で46115ノーツを獲得する", unlock: [{ type: "totalNotesCount", value: 46115 }] },
+  { id: "first_upgrade", name: "アップグレード！", iconSrc: "icon/nyami.png", desc: "はじめて強化をする", unlock: [{ type: "upgradesOwnedCount", value: 1 }] },
+  { id: "playtime_16min", name: "タイムプレーモード", iconSrc: "icon/minipop.png", desc: "累計16分間プレイする", unlock: [{ type: "playTimeSeconds", value: 960 }] },
+  { id: "first_generator", name: "キャラクターご招待", iconSrc: "icon/mimi.png", desc: "はじめてキャラクターを呼ぶ", unlock: [{ type: "generatorLevel", target: "g1", value: 1 }] },
+  { id: "first_sigma", name: "素数の世界へ", iconSrc: "icon/sigma.png", desc: "はじめてΣ様を呼ぶ", unlock: [{ type: "generatorLevel", target: "g7", value: 1 }] },
+  { id: "end", name: "おしまい", iconSrc: "icon/sigma.png", desc: "今このゲームでできることは大体全部終わったよ。また遊んでね", unlock: [{ type: "generatorLevel", target: "g7", value: 17 }] },
 ];
 
 let state = {
@@ -59,14 +91,14 @@ GENERATOR_DEFS.forEach(g => {
 });
 
 function formatNumber(n) {
-  if (n < 1000) {
+  if (n < 10000) {
     if (Number.isInteger(n)) return n.toString();
     return (Math.round(n * 100) / 100).toString();
   }
-  const units = ["K", "M", "B", "T", "Qa", "Qi"];
+  const units = ["万", "億", "兆", "京"];
   let unitIndex = -1;
-  while (n >= 1000 && unitIndex < units.length - 1) {
-    n /= 1000;
+  while (n >= 10000 && unitIndex < units.length - 1) {
+    n /= 10000;
     unitIndex++;
   }
   return n.toFixed(2) + units[unitIndex];
@@ -76,20 +108,29 @@ function generatorCost(def, level) {
   return Math.ceil(def.baseCost * Math.pow(def.growth, level));
 }
 
+function achievementBonusRate() {
+  // 実績1つ解除ごとに5%のcpsボーナス
+  return state.achievementsUnlocked.length * 0.05;
+}
+
+function achievementBonusMult() {
+  return 1 + achievementBonusRate();
+}
+
 function totalCps() {
   let total = 0;
   GENERATOR_DEFS.forEach(def => {
     const g = state.generators[def.id];
     total += def.cps * g.level * g.mult;
   });
-  return total * state.globalMult;
+  return total * state.globalMult * achievementBonusMult();
 }
 
 function perClickValue() {
   return state.perClick * state.clickMult;
 }
 
-/* ---------- 購入プレビュー用ツールチップ ---------- */
+/* ---------- 獲得プレビュー用ツールチップ ---------- */
 
 function formatPaybackTime(seconds) {
   if (!isFinite(seconds) || seconds <= 0) return "—";
@@ -117,23 +158,23 @@ function affordabilityRow(cost) {
   const cps = totalCps();
   const needed = cost - state.notesCount;
   if (cps <= 0) {
-    return `<div class="tooltip-row tooltip-wait"><span>⏳ 購入まで</span><span>収入がないため不明</span></div>`;
+    return `<div class="tooltip-row tooltip-wait"><span>⏳ 獲得まで</span><span>収入がないため不明</span></div>`;
   }
   const secondsNeeded = needed / cps;
-  return `<div class="tooltip-row tooltip-wait"><span>⏳ 購入まで</span><span>あと${formatPaybackTime(secondsNeeded)}</span></div>`;
+  return `<div class="tooltip-row tooltip-wait"><span>⏳ 獲得まで</span><span>あと${formatPaybackTime(secondsNeeded)}</span></div>`;
 }
 
 function generatorTooltipHtml(def) {
   const g = state.generators[def.id];
   const cost = generatorCost(def, g.level);
-  const currentContribution = def.cps * g.level * g.mult * state.globalMult;
-  const nextContribution = def.cps * (g.level + 1) * g.mult * state.globalMult;
+  const currentContribution = def.cps * g.level * g.mult * state.globalMult * achievementBonusMult();
+  const nextContribution = def.cps * (g.level + 1) * g.mult * state.globalMult * achievementBonusMult();
   const diff = nextContribution - currentContribution;
 
   return `
-    <div class="tooltip-title">${def.name} を購入 (Lv.${g.level} → Lv.${g.level + 1})</div>
+    <div class="tooltip-title">${def.name} を獲得 (Lv.${g.level} → Lv.${g.level + 1})</div>
     <div class="tooltip-row"><span>現在の生産量</span><span>${formatNumber(currentContribution)}/秒</span></div>
-    <div class="tooltip-row"><span>購入後の生産量</span><span>${formatNumber(nextContribution)}/秒</span></div>
+    <div class="tooltip-row"><span>獲得後の生産量</span><span>${formatNumber(nextContribution)}/秒</span></div>
     <div class="tooltip-row tooltip-highlight"><span>増加量</span><span>+${formatNumber(diff)}/秒</span></div>
     <div class="tooltip-row"><span>コスト</span><span>${formatNumber(cost)} ノーツ</span></div>
     ${affordabilityRow(cost)}
@@ -153,7 +194,7 @@ function upgradeTooltipHtml(def) {
     isCps = false;
     rows = `
       <div class="tooltip-row"><span>現在のクリック獲得量</span><span>+${formatNumber(current)}</span></div>
-      <div class="tooltip-row"><span>購入後のクリック獲得量</span><span>+${formatNumber(next)}</span></div>
+      <div class="tooltip-row"><span>獲得後のクリック獲得量</span><span>+${formatNumber(next)}</span></div>
       <div class="tooltip-row tooltip-highlight"><span>増加量</span><span>+${formatNumber(diff)}</span></div>
     `;
   } else if (def.type === "globalMult") {
@@ -162,18 +203,18 @@ function upgradeTooltipHtml(def) {
     diff = next - current;
     rows = `
       <div class="tooltip-row"><span>現在の毎秒獲得量（全体）</span><span>${formatNumber(current)}/秒</span></div>
-      <div class="tooltip-row"><span>購入後の毎秒獲得量（全体）</span><span>${formatNumber(next)}/秒</span></div>
+      <div class="tooltip-row"><span>獲得後の毎秒獲得量（全体）</span><span>${formatNumber(next)}/秒</span></div>
       <div class="tooltip-row tooltip-highlight"><span>増加量</span><span>+${formatNumber(diff)}/秒</span></div>
     `;
   } else if (def.type === "targetMult") {
     const targetDef = GENERATOR_DEFS.find(d => d.id === def.target);
     const g = state.generators[def.target];
-    const current = targetDef.cps * g.level * g.mult * state.globalMult;
-    const next = targetDef.cps * g.level * (g.mult * def.value) * state.globalMult;
+    const current = targetDef.cps * g.level * g.mult * state.globalMult * achievementBonusMult();
+    const next = targetDef.cps * g.level * (g.mult * def.value) * state.globalMult * achievementBonusMult();
     diff = next - current;
     rows = `
       <div class="tooltip-row"><span>${targetDef.name}の現在の生産量</span><span>${formatNumber(current)}/秒</span></div>
-      <div class="tooltip-row"><span>購入後の生産量</span><span>${formatNumber(next)}/秒</span></div>
+      <div class="tooltip-row"><span>獲得後の生産量</span><span>${formatNumber(next)}/秒</span></div>
       <div class="tooltip-row tooltip-highlight"><span>増加量</span><span>+${formatNumber(diff)}/秒</span></div>
     `;
   }
@@ -181,7 +222,7 @@ function upgradeTooltipHtml(def) {
   const effRow = isCps ? cpsEfficiencyRow(def.cost, diff) : unitEfficiencyRow(def.cost, diff);
 
   return `
-    <div class="tooltip-title">${def.name} を購入</div>
+    <div class="tooltip-title">${def.name} を獲得</div>
     ${rows}
     <div class="tooltip-row"><span>コスト</span><span>${formatNumber(def.cost)} ノーツ</span></div>
     ${affordabilityRow(def.cost)}
@@ -238,13 +279,13 @@ function refreshItemTooltip() {
 function isUnlocked(unlockConditions) {
   if (!unlockConditions || unlockConditions.length === 0) return true;
   return unlockConditions.every(cond => {
-    if (cond.type === "totalNotesCount" || cond.type === "totalPopkunNotes") {
+    if (cond.type === "totalNotesCount") {
       return state.totalNotesCount >= cond.value;
     }
     if (cond.type === "currentNotes") {
       return state.notesCount >= cond.value;
     }
-    if (cond.type === "generatorLevel" || cond.type === "generatorCount") {
+    if (cond.type === "generatorLevel") {
       const g = state.generators[cond.target];
       return g ? g.level >= cond.value : false;
     }
@@ -276,6 +317,7 @@ const statPlayTime = document.getElementById("statPlayTime");
 const statGeneratorTotal = document.getElementById("statGeneratorTotal");
 const ownedUpgradeList = document.getElementById("ownedUpgradeList");
 const achievementList = document.getElementById("achievementList");
+const achievementBonusText = document.getElementById("achievementBonusText");
 const achievementToastContainer = document.getElementById("achievementToastContainer");
 const itemTooltip = document.getElementById("itemTooltip");
 
@@ -300,7 +342,7 @@ function renderGenerators() {
       el.className = "item";
       el.dataset.id = def.id;
       el.innerHTML = `
-        <div class="item-icon">${def.iconSrc ? `<img class="item-icon-image" src="${def.iconSrc}" alt="${def.name}">` : def.icon}</div>
+        <div class="item-icon"><img class="item-icon-image" src="${def.iconSrc}" alt="${def.name}"></div>
         <div class="item-main">
           <div class="item-name"><span class="name-text">${def.name}</span><span class="owned-badge"></span></div>
           <div class="item-desc"></div>
@@ -354,7 +396,7 @@ function renderUpgrades() {
         el.className = "item";
         el.dataset.id = def.id;
         el.innerHTML = `
-          <div class="item-icon">${def.iconSrc ? `<img class="item-icon-image" src="${def.iconSrc}" alt="${def.name}">` : def.icon}</div>
+          <div class="item-icon"><img class="item-icon-image" src="${def.iconSrc}" alt="${def.name}"></div>
           <div class="item-main">
             <div class="item-name">${def.name}</div>
             <div class="item-desc">${def.desc}</div>
@@ -412,7 +454,7 @@ function renderStats() {
       el.className = "item";
       el.style.cursor = "default";
       el.innerHTML = `
-        <div class="item-icon">${def.iconSrc ? `<img class="item-icon-image" src="${def.iconSrc}" alt="${def.name}">` : def.icon}</div>
+        <div class="item-icon"><img class="item-icon-image" src="${def.iconSrc}" alt="${def.name}"></div>
         <div class="item-main">
           <div class="item-name">${def.name}</div>
           <div class="item-desc">${def.desc}</div>
@@ -427,6 +469,8 @@ function renderAchievements() {
   achievementList.innerHTML = "";
   const unlockedCount = state.achievementsUnlocked.length;
   const lockedCount = ACHIEVEMENT_DEFS.length - unlockedCount;
+  const bonusPercent = Math.round(achievementBonusRate() * 100);
+  achievementBonusText.textContent = `実績解除数 ${unlockedCount}：毎秒のノーツ生産数に${bonusPercent}%のボーナスが付くよ`;
 
   if (unlockedCount === 0) {
     achievementList.innerHTML = `<div class="item owned-summary">まだ解除した実績はありません</div>`;
@@ -441,7 +485,7 @@ function renderAchievements() {
       const el = document.createElement("div");
       el.className = "achievement-row";
       el.innerHTML = `
-        <div class="item-icon">${def.iconSrc ? `<img class="item-icon-image" src="${def.iconSrc}" alt="${def.name}">` : def.icon}</div>
+        <div class="item-icon"><img class="item-icon-image" src="${def.iconSrc}" alt="${def.name}"></div>
         <div class="item-main">
           <div class="item-name">${def.name}</div>
           <div class="item-desc">${def.desc}</div>
@@ -475,7 +519,7 @@ function announceAchievement(def) {
   const el = document.createElement("div");
   el.className = "achievement-toast";
   el.innerHTML = `
-    <div class="toast-icon">${def.icon}</div>
+    <div class="toast-icon"><img class="item-icon-image"  src="${def.iconSrc}" alt="${def.name}"></div>
     <div>
       <div class="toast-label">実績解除</div>
       <div class="toast-name">${def.name}</div>

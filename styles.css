@@ -124,8 +124,8 @@ body {
 }
 
 .popkun-btn {
-  width: 240px;
-  height: 180px;
+  width: 320px;
+  height: 230px;
   border: none;
   background: none;
   cursor: pointer;
@@ -146,8 +146,8 @@ body {
 }
 
 .popkun-image {
-  width: 220px;
-  height: 160px;
+  width: 320px;
+  height: 230px;
   object-fit: contain;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.08));
 }
@@ -488,6 +488,15 @@ body {
   font-size: 0.9rem; 
   font-weight: bold; 
   color: #4b8bea; 
+}
+
+.achievement-bonus-row {
+  background: #fff8e1;
+  border-color: #ffd54f;
+}
+
+.achievement-bonus-text {
+  color: #e07b00;
 }
 
 .section-label {
