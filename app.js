@@ -27,29 +27,29 @@ const UPGRADE_DEFS = [
   { id: "all1", name: "パーティーのはじまり", iconSrc: "icon/minipop.png", desc: "ポップンパーティでみんな大はしゃぎ！全員の能力が2倍になるよ！", cost: 50000, type: "globalMult", value: 2, unlock: [{ type: "totalNotesCount", value: 50000 }] },
 
   { id:"g1_10", name:"うさぎグッズ", iconSrc: "icon/mimi.png", desc: "お気に入りのグッズを身に着けて、ミミちゃんの能力が3倍になるよ", cost:300, type:"targetMult", target:"g1", value:3, unlock:[ {type:"generatorLevel",target:"g1",value:10} ] },
-  { id:"g1_20", name:"丸い蛍光灯", iconSrc: "icon/mimi.png", desc: "頭につけると無表情になっちゃうけど、ミミちゃんの能力が3倍になるよ", cost:1800, type:"targetMult", target:"g1", value:3, unlock:[ {type:"generatorLevel",target:"g1",value:20} ] },
-  { id:"g1_42", name:"風車とアンテナ", iconSrc: "icon/mimi.png", desc: "不思議な夢を見たミミちゃん。起きたら能力が10倍になってたよ", cost:20000, type:"targetMult", target:"g1", value:10, unlock:[ {type:"generatorLevel",target:"g1",value:42} ] },
+  { id:"g1_20", name:"丸い蛍光灯", iconSrc: "icon/evamimi.png", desc: "頭につけると無表情になっちゃうけど、ミミちゃんの能力が3倍になるよ", cost:1800, type:"targetMult", target:"g1", value:3, unlock:[ {type:"generatorLevel",target:"g1",value:20} ] },
+  { id:"g1_42", name:"風車アンテナ", iconSrc: "icon/syaka.png", desc: "不思議な夢を見たミミちゃん。起きたら能力が10倍になってたよ", cost:20000, type:"targetMult", target:"g1", value:10, unlock:[ {type:"generatorLevel",target:"g1",value:42} ] },
 
   { id:"g2_10", name:"ジェットコースター", iconSrc: "icon/nyami.png", desc: "スリル満点！ニャミちゃんの能力が2倍になるよ", cost:1500, type:"targetMult", target:"g2", value:2, unlock:[ {type:"generatorLevel",target:"g2",value:10} ] },
-  { id:"g2_20", name:"懐中時計", iconSrc: "icon/nyami.png", desc: "お気に入りのアイテムでニャミちゃんの能力が3倍になるよ", cost:9000, type:"targetMult", target:"g2", value:3, unlock:[ {type:"generatorLevel",target:"g2",value:20} ] },
+  { id:"g2_20", name:"懐中時計", iconSrc: "icon/timer.png", desc: "お気に入りのアイテムでニャミちゃんの能力が3倍になるよ", cost:9000, type:"targetMult", target:"g2", value:3, unlock:[ {type:"generatorLevel",target:"g2",value:20} ] },
   { id:"g2_m30", name:"ミミちゃんの応援", iconSrc: "icon/mimi.png", desc: "ミミちゃんからの応援でニャミちゃんの能力が2倍になるよ", cost:15000, type:"targetMult", target:"g2", value:3, unlock:[ {type:"generatorLevel",target:"g1",value:30} ] },
 
-  { id:"g3_5", name:"大きな安全ピン", iconSrc: "icon/poet.png", desc: "見習い天使の必需品。ポエットちゃんの能力が2倍になるよ", cost:15000, type:"targetMult", target:"g3", value:2, unlock:[ {type:"generatorLevel",target:"g3",value:5} ] },
-  { id:"g3_10", name:"魚の一家", iconSrc: "icon/poet.png", desc: "加藤さん一家の協力でポエットちゃんの能力が2倍になるよ", cost:50000, type:"targetMult", target:"g3", value:2, unlock:[ {type:"generatorLevel",target:"g3",value:10} ] },
-  { id:"g3_15", name:"シスター服", iconSrc: "icon/poet.png", desc: "不思議な力でポエットちゃんの能力が2倍になるよ", cost:100000, type:"targetMult", target:"g3", value:2, unlock:[ {type:"generatorLevel",target:"g3",value:15} ] },
-  { id:"g3_20", name:"金色のラッパ", iconSrc: "icon/poet.png", desc: "いつかママみたいな天使に！ポエットちゃんの能力が3倍になるよ", cost:150000, type:"targetMult", target:"g3", value:3, unlock:[ {type:"generatorLevel",target:"g3",value:20} ] },
+  { id:"g3_5", name:"大きな安全ピン", iconSrc: "icon/pin.png", desc: "見習い天使の必需品。ポエットちゃんの能力が2倍になるよ", cost:15000, type:"targetMult", target:"g3", value:2, unlock:[ {type:"generatorLevel",target:"g3",value:5} ] },
+  { id:"g3_10", name:"魚の一家", iconSrc: "icon/kato.png", desc: "加藤さん一家の協力でポエットちゃんの能力が2倍になるよ", cost:50000, type:"targetMult", target:"g3", value:2, unlock:[ {type:"generatorLevel",target:"g3",value:10} ] },
+  { id:"g3_15", name:"シスター服", iconSrc: "icon/sister.png", desc: "不思議な力でポエットちゃんの能力が2倍になるよ", cost:100000, type:"targetMult", target:"g3", value:2, unlock:[ {type:"generatorLevel",target:"g3",value:15} ] },
+  { id:"g3_20", name:"金色のラッパ", iconSrc: "icon/trumpet.png", desc: "いつかママみたいな天使に！ポエットちゃんの能力が3倍になるよ", cost:150000, type:"targetMult", target:"g3", value:3, unlock:[ {type:"generatorLevel",target:"g3",value:20} ] },
 
-  { id:"g4_10", name:"あまいおくすり", iconSrc: "icon/chermin.png", desc: "真っ暗な夜にとけこんで、ちぇるみんの能力が2倍になるよ", cost:150000, type:"targetMult", target:"g4", value:2, unlock:[ {type:"generatorLevel",target:"g4",value:10} ] },
-  { id:"g4_20", name:"まっぷたツートンソウル", iconSrc: "icon/chermin.png", desc: "運命の相手が見つかって、ちぇるみんの能力が5倍になるよ", cost:900000, type:"targetMult", target:"g4", value:5, unlock:[ {type:"generatorLevel",target:"g4",value:20} ] },
+  { id:"g4_10", name:"あまいおくすり", iconSrc: "icon/candy.png", desc: "真っ暗な夜にとけこんで、ちぇるみんの能力が2倍になるよ", cost:150000, type:"targetMult", target:"g4", value:2, unlock:[ {type:"generatorLevel",target:"g4",value:10} ] },
+  { id:"g4_20", name:"まっぷたツートンソウル", iconSrc: "icon/soul.png", desc: "運命の相手が見つかって、ちぇるみんの能力が5倍になるよ", cost:900000, type:"targetMult", target:"g4", value:5, unlock:[ {type:"generatorLevel",target:"g4",value:20} ] },
 
-  { id:"g5_10", name:"テクニカルマイコンパクト", iconSrc: "icon/mako.png", desc: "変身アイテムでスペース🪐マコの能力が3倍になるよ", cost:1500000, type:"targetMult", target:"g5", value:3, unlock:[ {type:"generatorLevel",target:"g5",value:10} ] },
-  { id:"g5_20", name:"キング様からの応援", iconSrc: "icon/mako.png", desc: "憧れの人からの応援でスペース🪐マコの能力が5倍になるよ", cost:9000000, type:"targetMult", target:"g5", value:5, unlock:[ {type:"generatorLevel",target:"g5",value:20} ] },
+  { id:"g5_10", name:"テクニカルマイコンパクト", iconSrc: "icon/compact.png", desc: "変身アイテムでスペース🪐マコの能力が3倍になるよ", cost:1500000, type:"targetMult", target:"g5", value:3, unlock:[ {type:"generatorLevel",target:"g5",value:10} ] },
+  { id:"g5_20", name:"キング様からの応援", iconSrc: "icon/king.png", desc: "憧れの人からの応援でスペース🪐マコの能力が5倍になるよ", cost:9000000, type:"targetMult", target:"g5", value:5, unlock:[ {type:"generatorLevel",target:"g5",value:20} ] },
 
-  { id:"g6_10", name:"コスプレ衣装", iconSrc: "icon/nia.png", desc: "こっそり着替えてニアちゃんの能力が3倍になるよ", cost:15000000, type:"targetMult", target:"g6", value:3, unlock:[ {type:"generatorLevel",target:"g6",value:10} ] },
-  { id:"g6_20", name:"暗くて狭い部屋", iconSrc: "icon/nia.png", desc: "落ち着く環境でニアちゃんの能力が6倍になるよ", cost:90000000, type:"targetMult", target:"g6", value:6, unlock:[ {type:"generatorLevel",target:"g6",value:20} ] },
+  { id:"g6_10", name:"コスプレ衣装", iconSrc: "icon/scissors.png", desc: "こっそり着替えてニアちゃんの能力が3倍になるよ", cost:15000000, type:"targetMult", target:"g6", value:3, unlock:[ {type:"generatorLevel",target:"g6",value:10} ] },
+  { id:"g6_20", name:"暗くて狭い部屋", iconSrc: "icon/room.png", desc: "落ち着く環境でニアちゃんの能力が6倍になるよ", cost:90000000, type:"targetMult", target:"g6", value:6, unlock:[ {type:"generatorLevel",target:"g6",value:20} ] },
 
-  { id:"g8_7", name:"ネクタル", iconSrc: "icon/sigma.png", desc: "神々のためのお酒。シグマ様の能力が3倍になるよ", cost:150000001, type:"targetMult", target:"g7", value:3, unlock:[ {type:"generatorLevel",target:"g7",value:7} ] },
-  { id:"g7_17", name:"シグマ様親衛隊", iconSrc: "icon/sigma.png", desc: "リソスとその仲間の力で、シグマ様の能力が7倍になるよ", cost:900000011, type:"targetMult", target:"g7", value:7, unlock:[ {type:"generatorLevel",target:"g7",value:17} ] },
+  { id:"g8_7", name:"ネクタル", iconSrc: "icon/nectar.png", desc: "神々のためのお酒。シグマ様の能力が3倍になるよ", cost:150000001, type:"targetMult", target:"g7", value:3, unlock:[ {type:"generatorLevel",target:"g7",value:7} ] },
+  { id:"g7_17", name:"シグマ様親衛隊", iconSrc: "icon/lithos.png", desc: "リソスとその仲間の力で、シグマ様の能力が7倍になるよ", cost:900000011, type:"targetMult", target:"g7", value:7, unlock:[ {type:"generatorLevel",target:"g7",value:17} ] },
 ];
 
 const ACHIEVEMENT_DEFS = [
@@ -172,7 +172,7 @@ function generatorTooltipHtml(def) {
   const diff = nextContribution - currentContribution;
 
   return `
-    <div class="tooltip-title">${def.name} を獲得 (Lv.${g.level} → Lv.${g.level + 1})</div>
+    <div class="tooltip-title">${def.name} (Lv.${g.level} → Lv.${g.level + 1})</div>
     <div class="tooltip-row"><span>現在の生産量</span><span>${formatNumber(currentContribution)}/秒</span></div>
     <div class="tooltip-row"><span>獲得後の生産量</span><span>${formatNumber(nextContribution)}/秒</span></div>
     <div class="tooltip-row tooltip-highlight"><span>増加量</span><span>+${formatNumber(diff)}/秒</span></div>
@@ -222,7 +222,7 @@ function upgradeTooltipHtml(def) {
   const effRow = isCps ? cpsEfficiencyRow(def.cost, diff) : unitEfficiencyRow(def.cost, diff);
 
   return `
-    <div class="tooltip-title">${def.name} を獲得</div>
+    <div class="tooltip-title">${def.name}</div>
     ${rows}
     <div class="tooltip-row"><span>コスト</span><span>${formatNumber(def.cost)} ノーツ</span></div>
     ${affordabilityRow(def.cost)}
