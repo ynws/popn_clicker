@@ -1,0 +1,871 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>クッキークリッカー ひな形</title>
+<style>
+  :root {
+    --bg: #2b1d14;
+    --panel: #3d2a1c;
+    --panel-light: #4d3624;
+    --accent: #e8b04b;
+    --accent-dark: #b8863a;
+    --text: #f5e6d0;
+    --text-dim: #c9b299;
+    --green: #7cb342;
+    --red: #d9534f;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", "Hiragino Kaku Gothic ProN", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  .layout {
+    display: flex;
+    min-height: 100vh;
+  }
+  /* ---------- 左側：クリックエリア ---------- */
+  .click-area {
+    flex: 1.1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    position: relative;
+  }
+  .count {
+    font-size: 2.6rem;
+    font-weight: bold;
+    color: var(--accent);
+    text-shadow: 0 2px 4px rgba(0,0,0,0.4);
+  }
+  .count-sub {
+    color: var(--text-dim);
+    margin-bottom: 24px;
+    font-size: 0.95rem;
+  }
+  .cookie-btn {
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
+    background: radial-gradient(circle at 35% 30%, #d99b3d, #8a5a22 75%);
+    box-shadow: 0 8px 0 var(--accent-dark), 0 12px 20px rgba(0,0,0,0.4);
+    position: relative;
+    transition: transform 0.05s ease;
+    outline: none;
+  }
+  .cookie-btn:active {
+    transform: translateY(6px);
+    box-shadow: 0 2px 0 var(--accent-dark), 0 4px 10px rgba(0,0,0,0.4);
+  }
+  .cookie-btn::before {
+    content: "🍪";
+    font-size: 100px;
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    filter: drop-shadow(0 4px 4px rgba(0,0,0,0.3));
+  }
+  .float-text {
+    position: absolute;
+    font-weight: bold;
+    color: var(--accent);
+    pointer-events: none;
+    animation: floatUp 0.8s ease-out forwards;
+    font-size: 1.2rem;
+  }
+  @keyframes floatUp {
+    0%   { opacity: 1; transform: translate(-50%, 0); }
+    100% { opacity: 0; transform: translate(-50%, -60px); }
+  }
+  .cps-info {
+    margin-top: 20px;
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    text-align: center;
+  }
+
+  /* ---------- 右側：ショップ ---------- */
+  .shop {
+    width: 380px;
+    background: var(--panel);
+    padding: 16px;
+    overflow-y: auto;
+    border-left: 2px solid var(--panel-light);
+  }
+  .shop h2 {
+    margin: 4px 0 12px;
+    font-size: 1.1rem;
+    color: var(--accent);
+    border-bottom: 1px solid var(--panel-light);
+    padding-bottom: 8px;
+  }
+  .tabs {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .tab-btn {
+    flex: 1;
+    padding: 8px;
+    background: var(--panel-light);
+    border: none;
+    color: var(--text-dim);
+    border-radius: 6px 6px 0 0;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  .tab-btn.active {
+    background: var(--accent);
+    color: #2b1d14;
+  }
+  .item-list { display: flex; flex-direction: column; gap: 8px; }
+  .item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--panel-light);
+    border: 1px solid transparent;
+    border-radius: 8px;
+    padding: 10px 12px;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .item:hover { border-color: var(--accent); }
+  .item.disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+  }
+  .item.disabled:hover { border-color: transparent; }
+  .item-icon { font-size: 1.6rem; margin-right: 10px; }
+  .item-main { flex: 1; }
+  .item-name { font-weight: bold; font-size: 0.95rem; }
+  .item-desc { font-size: 0.75rem; color: var(--text-dim); }
+  .item-cost { font-size: 0.85rem; color: var(--accent); white-space: nowrap; }
+  .item-owned {
+    background: var(--accent-dark);
+    color: #2b1d14;
+    font-weight: bold;
+    font-size: 0.8rem;
+    border-radius: 10px;
+    padding: 2px 8px;
+    margin-left: 8px;
+  }
+  .item.locked {
+    cursor: not-allowed;
+    filter: grayscale(0.6);
+    opacity: 0.6;
+  }
+  .item.locked:hover { border-color: transparent; }
+  .item.locked-summary,
+  .item.owned-summary {
+    cursor: default;
+    justify-content: center;
+    color: var(--text-dim);
+    font-size: 0.85rem;
+  }
+  .item.locked-summary:hover,
+  .item.owned-summary:hover { border-color: transparent; }
+  .footer-buttons {
+    display: flex;
+    gap: 8px;
+    margin-top: 16px;
+  }
+  .footer-buttons button {
+    flex: 1;
+    padding: 8px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  .btn-save { background: var(--green); color: white; }
+  .btn-reset { background: var(--red); color: white; }
+  .save-status {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    text-align: center;
+    margin-top: 6px;
+    height: 14px;
+  }
+  .stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--panel-light);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+  }
+  .stat-label { font-size: 0.9rem; color: var(--text-dim); }
+  .stat-value { font-size: 1rem; font-weight: bold; color: var(--accent); }
+  .section-label {
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: var(--text-dim);
+    margin: 14px 0 8px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid var(--panel-light);
+  }
+  .section-label:first-child { margin-top: 0; }
+
+  /* ---------- 実績アナウンス（トースト） ---------- */
+  .achievement-toast-container {
+    position: fixed;
+    top: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+  }
+  .achievement-toast {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-dark));
+    color: #2b1d14;
+    padding: 12px 20px;
+    border-radius: 10px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+    font-weight: bold;
+    animation: toastInOut 3.5s ease forwards;
+  }
+  .achievement-toast .toast-icon { font-size: 1.8rem; }
+  .achievement-toast .toast-label { font-size: 0.7rem; opacity: 0.75; }
+  .achievement-toast .toast-name { font-size: 1rem; }
+  @keyframes toastInOut {
+    0%   { opacity: 0; transform: translateY(-20px); }
+    10%  { opacity: 1; transform: translateY(0); }
+    85%  { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-20px); }
+  }
+
+  /* ---------- 記録タブ：実績一覧 ---------- */
+  .achievement-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--panel-light);
+    border-radius: 8px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+  }
+  .achievement-row .item-icon { font-size: 1.6rem; }
+</style>
+</head>
+<body>
+
+<!-- 実績解除時のアナウンスがここに積み重なって表示される -->
+<div class="achievement-toast-container" id="achievementToastContainer"></div>
+
+<div class="layout">
+
+  <!-- クリックエリア -->
+  <div class="click-area" id="clickArea">
+    <div class="count" id="countDisplay">0 個</div>
+    <div class="count-sub" id="perClickDisplay">クリックあたり +1</div>
+    <button class="cookie-btn" id="cookieBtn"></button>
+    <div class="cps-info" id="cpsDisplay">毎秒 +0 個</div>
+  </div>
+
+  <!-- ショップ -->
+  <div class="shop">
+    <h2>🏪 ショップ</h2>
+    <div class="tabs">
+      <button class="tab-btn active" data-tab="shop">ショップ</button>
+      <button class="tab-btn" data-tab="stats">記録</button>
+    </div>
+
+    <div id="shopPanel">
+      <div class="section-label">✨ アップグレード</div>
+      <div class="item-list" id="upgradeList"></div>
+      <div class="section-label">🏭 生産施設</div>
+      <div class="item-list" id="generatorList"></div>
+    </div>
+
+    <div id="statsPanel" style="display:none;">
+      <div class="stat-row">
+        <span class="stat-label">クリック回数</span>
+        <span class="stat-value" id="statClickCount">0 回</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">累計獲得クッキー数</span>
+        <span class="stat-value" id="statTotalEarned">0 個</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">プレイ時間</span>
+        <span class="stat-value" id="statPlayTime">0秒</span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label">所持している施設の合計数</span>
+        <span class="stat-value" id="statGeneratorTotal">0 個</span>
+      </div>
+
+      <div class="section-label">🎖️ 購入済みアップグレード</div>
+      <div class="item-list" id="ownedUpgradeList"></div>
+
+      <div class="section-label">🏆 実績</div>
+      <div class="item-list" id="achievementList"></div>
+
+      <div class="footer-buttons">
+        <button class="btn-save" id="saveBtn">保存</button>
+        <button class="btn-reset" id="resetBtn">リセット</button>
+      </div>
+      <div class="save-status" id="saveStatus"></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+/* =========================================================
+   クッキークリッカー系ゲーム ひな形
+   ---------------------------------------------------------
+   ・cookies        : 所持している通貨（クッキー）
+   ・perClick       : クリック1回あたりの獲得量
+   ・generators     : 放置で自動生産する施設（買うほど値上がりする）
+   ・upgrades       : 一度きり購入できる強化（perClick や生産量を倍増など）
+   ・unlock         : 各施設/アップグレードの解放条件。満たすまで「？？？」表示・購入不可
+   ・achievements   : 実績。unlockと同じ条件ロジックで判定し、解除時に画面上部でアナウンスする
+   ・save/load      : window.storage を使って個人データとして保存
+   このファイルをベースに、施設やアップグレードの種類・演出・
+   実績システムなどを追加していくことを想定しています。
+   ========================================================= */
+
+// ---------- 解放条件（unlock）の書き方 ----------
+// unlock は「配列」で複数条件を指定でき、配列内の条件はすべて満たす必要がある(AND)。
+// unlock を省略、または空配列 [] にすると「最初から解放済み」になる。
+//
+// 条件の種類:
+//   { type: "totalCookies",   value: N }              → 累計で獲得したクッキー数が N 以上
+//   { type: "currentCookies", value: N }               → 現在の所持クッキー数が N 以上
+//   { type: "generatorCount", target: "施設id", value: N } → 指定した施設を N 個以上所持
+//   { type: "clickCount",     value: N }               → プレイヤーがクッキーを直接クリックした回数が N 以上
+//   { type: "playTimeSeconds", value: N }              → 累計プレイ時間が N 秒以上
+//   { type: "upgradesOwnedCount", value: N }           → 購入済みアップグレードの数が N 個以上
+//
+// 例: unlock: [{ type: "totalCookies", value: 100 }, { type: "generatorCount", target: "cursor", value: 1 }]
+//     → 累計100個以上 かつ カーソルを1個以上所持していないと解放されない
+
+// ---------- ゲームデータ定義 ----------
+// baseCost: 1個目の価格 / growth: 買うごとの価格上昇率 / cps: 1個あたりの毎秒生産量
+const GENERATOR_DEFS = [
+  { id: "cursor",  name: "カーソル",     icon: "👆", desc: "自動で1回クリックしてくれる",       baseCost: 15,      growth: 1.15, cps: 0.1,
+    unlock: [] },
+  { id: "grandma", name: "おばあちゃん", icon: "👵", desc: "焼き立てのクッキーを作ってくれる",   baseCost: 100,     growth: 1.15, cps: 1,
+    unlock: [{ type: "generatorCount", target: "cursor", value: 1 }] },
+  { id: "farm",    name: "クッキー農場", icon: "🌾", desc: "クッキーの原料を栽培する",           baseCost: 1100,    growth: 1.15, cps: 8,
+    unlock: [{ type: "generatorCount", target: "grandma", value: 1 }] },
+  { id: "factory", name: "工場",         icon: "🏭", desc: "大量生産ラインを構築する",           baseCost: 12000,   growth: 1.15, cps: 47,
+    unlock: [{ type: "generatorCount", target: "farm", value: 1 }] },
+  { id: "bank",    name: "銀行",         icon: "🏦", desc: "クッキー先物取引で利益を生む",       baseCost: 130000,  growth: 1.15, cps: 260,
+    unlock: [{ type: "generatorCount", target: "factory", value: 1 }] },
+];
+
+// perClick: クリック追加量 / cpsMult: 全体生産量への倍率 / target: 特定施設のみ強化する場合のid
+const UPGRADE_DEFS = [
+  { id: "click2",     name: "頑丈な指",       icon: "💪", desc: "クリック獲得量が2倍になる",        cost: 100,   type: "clickMult", value: 2,
+    unlock: [{ type: "totalCookies", value: 50 }] },
+  { id: "cursor2",    name: "強化カーソル",   icon: "⚡", desc: "カーソルの生産量が2倍になる",      cost: 200,   type: "targetMult", target: "cursor", value: 2,
+    unlock: [{ type: "generatorCount", target: "cursor", value: 5 }] },
+  { id: "grandma2",   name: "秘伝のレシピ",   icon: "📜", desc: "おばあちゃんの生産量が2倍になる",  cost: 1000,  type: "targetMult", target: "grandma", value: 2,
+    unlock: [{ type: "generatorCount", target: "grandma", value: 5 }] },
+  { id: "globalcps2", name: "生産ライン改善", icon: "⚙️", desc: "全施設の生産量が2倍になる",        cost: 50000, type: "globalMult", value: 2,
+    unlock: [{ type: "totalCookies", value: 10000 }] },
+  { id: "clickmaster", name: "クリックの匠", icon: "🖱️", desc: "クリック獲得量がさらに2倍になる", cost: 500,  type: "clickMult", value: 2,
+    unlock: [{ type: "clickCount", value: 100 }] },
+];
+
+// ---------- 実績（Achievements）----------
+// 解放条件の書き方は生産施設・アップグレードと全く同じ unlock 配列を使う。
+// desc には「何をすると解除されるか」を自然文で書いておき、記録タブでそのまま条件として表示する。
+const ACHIEVEMENT_DEFS = [
+  { id: "first_click",   name: "はじめの一歩",   icon: "👆", desc: "はじめてクッキーをクリックする",
+    unlock: [{ type: "clickCount", value: 1 }] },
+  { id: "click_100",     name: "クリック職人",   icon: "🖱️", desc: "クッキーを100回クリックする",
+    unlock: [{ type: "clickCount", value: 100 }] },
+  { id: "earn_1000",     name: "クッキー長者",   icon: "🍪", desc: "累計で1,000個のクッキーを獲得する",
+    unlock: [{ type: "totalCookies", value: 1000 }] },
+  { id: "first_generator", name: "本格始動",     icon: "👵", desc: "はじめて生産施設を購入する",
+    unlock: [{ type: "generatorCount", target: "cursor", value: 1 }] },
+  { id: "first_upgrade", name: "アップグレード開眼", icon: "✨", desc: "はじめてアップグレードを購入する",
+    unlock: [{ type: "upgradesOwnedCount", value: 1 }] },
+  { id: "playtime_10min", name: "長時間プレイヤー", icon: "⏰", desc: "累計10分間プレイする",
+    unlock: [{ type: "playTimeSeconds", value: 600 }] },
+];
+
+// ---------- ゲーム状態 ----------
+let state = {
+  cookies: 0,
+  totalCookiesEarned: 0, // 解放条件の判定に使う「累計獲得数」（使って減っても解放は戻らない）
+  clickCount: 0, // プレイヤーがクッキーを直接クリックした回数（解放条件に使える）
+  playTimeSeconds: 0, // 累計プレイ時間（秒）。ページを開いている間、毎秒加算される
+  perClick: 1,
+  clickMult: 1,
+  globalMult: 1,
+  generators: {},   // { cursor: {count: 0, mult: 1}, ... }
+  upgradesOwned: [], // 購入済みアップグレードのidリスト
+  achievementsUnlocked: [], // 解除済み実績のidリスト
+};
+
+// クッキーを獲得する処理は必ずこの関数を通す（totalCookiesEarnedも同時に増える）
+function earnCookies(amount) {
+  state.cookies += amount;
+  state.totalCookiesEarned += amount;
+}
+
+GENERATOR_DEFS.forEach(g => {
+  state.generators[g.id] = { count: 0, mult: 1 };
+});
+
+// ---------- ユーティリティ ----------
+function formatNumber(n) {
+  if (n < 1000) {
+    // 1000未満は小数を切り捨てず表示する（cps 0.1 などが "0" にならないようにする）
+    if (Number.isInteger(n)) return n.toString();
+    return (Math.round(n * 100) / 100).toString();
+  }
+  const units = ["K", "M", "B", "T", "Qa", "Qi"];
+  let unitIndex = -1;
+  while (n >= 1000 && unitIndex < units.length - 1) {
+    n /= 1000;
+    unitIndex++;
+  }
+  return n.toFixed(2) + units[unitIndex];
+}
+
+function generatorCost(def, ownedCount) {
+  return Math.ceil(def.baseCost * Math.pow(def.growth, ownedCount));
+}
+
+function totalCps() {
+  let total = 0;
+  GENERATOR_DEFS.forEach(def => {
+    const g = state.generators[def.id];
+    total += def.cps * g.count * g.mult;
+  });
+  return total * state.globalMult;
+}
+
+function perClickValue() {
+  return state.perClick * state.clickMult;
+}
+
+// 解放条件をすべて満たしているか判定する（条件が1つでも欠けていればfalse）
+function isUnlocked(unlockConditions) {
+  if (!unlockConditions || unlockConditions.length === 0) return true;
+  return unlockConditions.every(cond => {
+    if (cond.type === "totalCookies") {
+      return state.totalCookiesEarned >= cond.value;
+    }
+    if (cond.type === "currentCookies") {
+      return state.cookies >= cond.value;
+    }
+    if (cond.type === "generatorCount") {
+      const g = state.generators[cond.target];
+      return g ? g.count >= cond.value : false;
+    }
+    if (cond.type === "clickCount") {
+      return state.clickCount >= cond.value;
+    }
+    if (cond.type === "playTimeSeconds") {
+      return state.playTimeSeconds >= cond.value;
+    }
+    if (cond.type === "upgradesOwnedCount") {
+      return state.upgradesOwned.length >= cond.value;
+    }
+    // 未知の条件タイプは安全側に倒してロックしたままにする
+    console.warn("未知の解放条件タイプです:", cond.type);
+    return false;
+  });
+}
+
+// ---------- 描画 ----------
+const countDisplay = document.getElementById("countDisplay");
+const perClickDisplay = document.getElementById("perClickDisplay");
+const cpsDisplay = document.getElementById("cpsDisplay");
+const generatorList = document.getElementById("generatorList");
+const upgradeList = document.getElementById("upgradeList");
+const shopPanel = document.getElementById("shopPanel");
+const statsPanel = document.getElementById("statsPanel");
+const saveStatus = document.getElementById("saveStatus");
+const statClickCount = document.getElementById("statClickCount");
+const statTotalEarned = document.getElementById("statTotalEarned");
+const statPlayTime = document.getElementById("statPlayTime");
+const statGeneratorTotal = document.getElementById("statGeneratorTotal");
+const ownedUpgradeList = document.getElementById("ownedUpgradeList");
+const achievementList = document.getElementById("achievementList");
+const achievementToastContainer = document.getElementById("achievementToastContainer");
+
+function renderTopBar() {
+  countDisplay.textContent = formatNumber(state.cookies) + " 個";
+  perClickDisplay.textContent = "クリックあたり +" + formatNumber(perClickValue());
+  cpsDisplay.textContent = "毎秒 +" + formatNumber(totalCps()) + " 個";
+}
+
+// 直前に描画した「表示中の施設idの並び＋未解放数」を覚えておき、
+// これが変わらない限りDOMは作り直さない（ホバー/クリックの安定のため）
+let lastGeneratorSignature = null;
+
+function renderGenerators() {
+  const visibleDefs = GENERATOR_DEFS.filter(def => isUnlocked(def.unlock));
+  const lockedCount = GENERATOR_DEFS.length - visibleDefs.length;
+  const signature = visibleDefs.map(d => d.id).join(",") + "|" + lockedCount;
+
+  if (signature !== lastGeneratorSignature) {
+    // 表示すべき施設の顔ぶれが変わった時だけ、DOMを作り直す
+    generatorList.innerHTML = "";
+    visibleDefs.forEach(def => {
+      const el = document.createElement("div");
+      el.className = "item";
+      el.dataset.id = def.id;
+      el.innerHTML = `
+        <div class="item-icon">${def.icon}</div>
+        <div class="item-main">
+          <div class="item-name"><span class="name-text">${def.name}</span><span class="owned-badge"></span></div>
+          <div class="item-desc"></div>
+        </div>
+        <div class="item-cost"></div>
+      `;
+      // cost や affordable はクリック時に buyGenerator 内で毎回最新の値を計算するので、
+      // ここでは古い値を閉じ込めない
+      el.addEventListener("click", () => buyGenerator(def));
+      generatorList.appendChild(el);
+    });
+    if (lockedCount > 0) {
+      const el = document.createElement("div");
+      el.className = "item locked-summary";
+      el.innerHTML = `<div>🔒 未解放の生産施設があと${lockedCount}個あります</div>`;
+      generatorList.appendChild(el);
+    }
+    lastGeneratorSignature = signature;
+  }
+
+  // 顔ぶれが同じ場合は、既存の要素の中身（価格・所持数・購入可否）だけを書き換える
+  visibleDefs.forEach(def => {
+    const el = generatorList.querySelector(`[data-id="${def.id}"]`);
+    if (!el) return;
+    const g = state.generators[def.id];
+    const cost = generatorCost(def, g.count);
+    const affordable = state.cookies >= cost;
+    el.classList.toggle("disabled", !affordable);
+    el.querySelector(".owned-badge").innerHTML = g.count > 0 ? ` <span class="item-owned">${g.count}</span>` : "";
+    el.querySelector(".item-desc").textContent = `${def.desc}（毎秒 +${formatNumber(def.cps * g.mult)}/個）`;
+    el.querySelector(".item-cost").textContent = formatNumber(cost);
+  });
+}
+
+// 直前に描画した「表示中のアップグレードidの並び＋未解放数」を覚えておく
+let lastUpgradeSignature = null;
+
+function renderUpgrades() {
+  const visibleDefs = UPGRADE_DEFS.filter(def => !state.upgradesOwned.includes(def.id) && isUnlocked(def.unlock));
+  const lockedCount = UPGRADE_DEFS.filter(def => !state.upgradesOwned.includes(def.id) && !isUnlocked(def.unlock)).length;
+  const signature = visibleDefs.map(d => d.id).join(",") + "|" + lockedCount;
+
+  if (signature !== lastUpgradeSignature) {
+    upgradeList.innerHTML = "";
+
+    if (visibleDefs.length === 0 && lockedCount === 0) {
+      upgradeList.innerHTML = `<div class="item-desc" style="text-align:center;padding:12px;">購入可能なアップグレードはありません</div>`;
+    } else {
+      visibleDefs.forEach(def => {
+        const el = document.createElement("div");
+        el.className = "item";
+        el.dataset.id = def.id;
+        el.innerHTML = `
+          <div class="item-icon">${def.icon}</div>
+          <div class="item-main">
+            <div class="item-name">${def.name}</div>
+            <div class="item-desc">${def.desc}</div>
+          </div>
+          <div class="item-cost">${formatNumber(def.cost)}</div>
+        `;
+        el.addEventListener("click", () => buyUpgrade(def));
+        upgradeList.appendChild(el);
+      });
+      if (lockedCount > 0) {
+        const el = document.createElement("div");
+        el.className = "item locked-summary";
+        el.innerHTML = `<div>🔒 未解放のアップグレードがあと${lockedCount}個あります</div>`;
+        upgradeList.appendChild(el);
+      }
+    }
+    lastUpgradeSignature = signature;
+  }
+
+  // 顔ぶれが同じ場合は、購入可否（disabledクラス）だけを書き換える
+  visibleDefs.forEach(def => {
+    const el = upgradeList.querySelector(`[data-id="${def.id}"]`);
+    if (!el) return;
+    const affordable = state.cookies >= def.cost;
+    el.classList.toggle("disabled", !affordable);
+  });
+}
+
+function formatPlayTime(totalSeconds) {
+  const h = Math.floor(totalSeconds / 3600);
+  const m = Math.floor((totalSeconds % 3600) / 60);
+  const s = Math.floor(totalSeconds % 60);
+  if (h > 0) return `${h}時間${m}分${s}秒`;
+  if (m > 0) return `${m}分${s}秒`;
+  return `${s}秒`;
+}
+
+function renderStats() {
+  statClickCount.textContent = formatNumber(state.clickCount) + " 回";
+  statTotalEarned.textContent = formatNumber(state.totalCookiesEarned) + " 個";
+  statPlayTime.textContent = formatPlayTime(state.playTimeSeconds);
+  const generatorTotal = GENERATOR_DEFS.reduce((sum, def) => sum + state.generators[def.id].count, 0);
+  statGeneratorTotal.textContent = formatNumber(generatorTotal) + " 個";
+
+  // 購入済みアップグレード一覧
+  ownedUpgradeList.innerHTML = "";
+  if (state.upgradesOwned.length === 0) {
+    ownedUpgradeList.innerHTML = `<div class="item owned-summary">まだ購入したアップグレードはありません</div>`;
+  } else {
+    state.upgradesOwned.forEach(id => {
+      const def = UPGRADE_DEFS.find(u => u.id === id);
+      if (!def) return; // 定義が削除されていた場合はスキップ
+      const el = document.createElement("div");
+      el.className = "item";
+      el.style.cursor = "default";
+      el.innerHTML = `
+        <div class="item-icon">${def.icon}</div>
+        <div class="item-main">
+          <div class="item-name">${def.name}</div>
+          <div class="item-desc">${def.desc}</div>
+        </div>
+      `;
+      ownedUpgradeList.appendChild(el);
+    });
+  }
+}
+
+// 解除済みの実績と、その条件（desc）を一覧表示する
+function renderAchievements() {
+  achievementList.innerHTML = "";
+  const unlockedCount = state.achievementsUnlocked.length;
+  const lockedCount = ACHIEVEMENT_DEFS.length - unlockedCount;
+
+  if (unlockedCount === 0) {
+    achievementList.innerHTML = `<div class="item owned-summary">まだ解除した実績はありません</div>`;
+  } else {
+    state.achievementsUnlocked.forEach(id => {
+      const def = ACHIEVEMENT_DEFS.find(a => a.id === id);
+      if (!def) return; // 定義が削除されていた場合はスキップ
+      const el = document.createElement("div");
+      el.className = "achievement-row";
+      el.innerHTML = `
+        <div class="item-icon">${def.icon}</div>
+        <div class="item-main">
+          <div class="item-name">${def.name}</div>
+          <div class="item-desc">${def.desc}</div>
+        </div>
+      `;
+      achievementList.appendChild(el);
+    });
+  }
+
+  if (lockedCount > 0) {
+    const el = document.createElement("div");
+    el.className = "item locked-summary";
+    el.innerHTML = `<div>🔒 未解放の実績があと${lockedCount}個あります</div>`;
+    achievementList.appendChild(el);
+  }
+}
+
+// まだ解除されていない実績の条件を毎回チェックし、満たしていれば解除してアナウンスする
+function checkAchievements() {
+  ACHIEVEMENT_DEFS.forEach(def => {
+    if (state.achievementsUnlocked.includes(def.id)) return; // 解除済みはスキップ
+    if (isUnlocked(def.unlock)) {
+      state.achievementsUnlocked.push(def.id);
+      announceAchievement(def);
+    }
+  });
+}
+
+// 実績解除を画面上部にトーストとしてアナウンスする（複数同時解除でも積み重なって表示される）
+function announceAchievement(def) {
+  const el = document.createElement("div");
+  el.className = "achievement-toast";
+  el.innerHTML = `
+    <div class="toast-icon">${def.icon}</div>
+    <div>
+      <div class="toast-label">実績解除</div>
+      <div class="toast-name">${def.name}</div>
+    </div>
+  `;
+  achievementToastContainer.appendChild(el);
+  setTimeout(() => el.remove(), 3500); // CSSのアニメーション時間と合わせる
+}
+
+function renderAll() {
+  checkAchievements();
+  renderTopBar();
+  renderGenerators();
+  renderUpgrades();
+  renderStats();
+  renderAchievements();
+}
+
+// ---------- 購入ロジック ----------
+function buyGenerator(def) {
+  if (!isUnlocked(def.unlock)) return; // 未解放は購入不可（表示上は隠れているが念のため二重チェック）
+  const g = state.generators[def.id];
+  const cost = generatorCost(def, g.count);
+  if (state.cookies < cost) return;
+  state.cookies -= cost;
+  g.count += 1;
+  renderAll();
+}
+
+function buyUpgrade(def) {
+  if (!isUnlocked(def.unlock)) return; // 未解放は購入不可（表示上は隠れているが念のため二重チェック）
+  if (state.cookies < def.cost) return;
+  state.cookies -= def.cost;
+  state.upgradesOwned.push(def.id);
+
+  if (def.type === "clickMult") {
+    state.clickMult *= def.value;
+  } else if (def.type === "globalMult") {
+    state.globalMult *= def.value;
+  } else if (def.type === "targetMult") {
+    state.generators[def.target].mult *= def.value;
+  }
+  renderAll();
+}
+
+// ---------- クリック処理 ----------
+const cookieBtn = document.getElementById("cookieBtn");
+const clickArea = document.getElementById("clickArea");
+
+cookieBtn.addEventListener("click", (e) => {
+  state.clickCount += 1;
+  earnCookies(perClickValue());
+  spawnFloatText("+" + formatNumber(perClickValue()), e.clientX, e.clientY);
+  renderTopBar();
+  // ショップの購入可否表示も更新する（コストは変わらないが手軽さ優先で全体再描画してもよい）
+  renderGenerators();
+  renderUpgrades();
+});
+
+function spawnFloatText(text, x, y) {
+  const el = document.createElement("div");
+  el.className = "float-text";
+  el.textContent = text;
+  const rect = clickArea.getBoundingClientRect();
+  el.style.left = (x - rect.left) + "px";
+  el.style.top = (y - rect.top) + "px";
+  clickArea.appendChild(el);
+  setTimeout(() => el.remove(), 800);
+}
+
+// ---------- 自動生産（毎秒） ----------
+setInterval(() => {
+  state.playTimeSeconds += 1;
+  const cps = totalCps();
+  if (cps > 0) {
+    earnCookies(cps);
+  }
+  renderAll();
+}, 1000);
+
+// ---------- タブ切り替え ----------
+document.querySelectorAll(".tab-btn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    document.querySelectorAll(".tab-btn").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    const tab = btn.dataset.tab;
+    shopPanel.style.display = tab === "shop" ? "block" : "none";
+    statsPanel.style.display = tab === "stats" ? "block" : "none";
+  });
+});
+
+// ---------- セーブ / ロード ----------
+const SAVE_KEY = "cookie-clicker-save";
+
+async function saveGame(silent) {
+  try {
+    await window.storage.set(SAVE_KEY, JSON.stringify(state));
+    if (!silent) showSaveStatus("保存しました");
+  } catch (err) {
+    console.error("保存に失敗しました", err);
+    if (!silent) showSaveStatus("保存に失敗しました");
+  }
+}
+
+async function loadGame() {
+  try {
+    const result = await window.storage.get(SAVE_KEY);
+    if (result && result.value) {
+      const loaded = JSON.parse(result.value);
+      // 新しい施設/アップグレードが後から追加されても壊れないようマージする
+      state.cookies = loaded.cookies ?? 0;
+      state.totalCookiesEarned = loaded.totalCookiesEarned ?? loaded.cookies ?? 0;
+      state.clickCount = loaded.clickCount ?? 0;
+      state.playTimeSeconds = loaded.playTimeSeconds ?? 0;
+      state.perClick = loaded.perClick ?? 1;
+      state.clickMult = loaded.clickMult ?? 1;
+      state.globalMult = loaded.globalMult ?? 1;
+      state.upgradesOwned = loaded.upgradesOwned ?? [];
+      state.achievementsUnlocked = loaded.achievementsUnlocked ?? [];
+      GENERATOR_DEFS.forEach(def => {
+        if (loaded.generators && loaded.generators[def.id]) {
+          state.generators[def.id] = loaded.generators[def.id];
+        }
+      });
+    }
+  } catch (err) {
+    // 未保存（初回起動）の場合はここに来る
+    console.log("セーブデータが見つかりませんでした（初回起動）");
+  }
+  renderAll();
+}
+
+function showSaveStatus(msg) {
+  saveStatus.textContent = msg;
+  setTimeout(() => { saveStatus.textContent = ""; }, 2000);
+}
+
+document.getElementById("saveBtn").addEventListener("click", () => saveGame(false));
+
+document.getElementById("resetBtn").addEventListener("click", async () => {
+  if (!confirm("本当にデータをリセットしますか？この操作は取り消せません。")) return;
+  state.cookies = 0;
+  state.totalCookiesEarned = 0;
+  state.clickCount = 0;
+  state.playTimeSeconds = 0;
+  state.perClick = 1;
+  state.clickMult = 1;
+  state.globalMult = 1;
+  state.upgradesOwned = [];
+  state.achievementsUnlocked = [];
+  GENERATOR_DEFS.forEach(def => {
+    state.generators[def.id] = { count: 0, mult: 1 };
+  });
+  await saveGame(true);
+  renderAll();
+  showSaveStatus("リセットしました");
+});
+
+// 30秒ごとに自動セーブ
+setInterval(() => saveGame(true), 30000);
+
+// ---------- 起動 ----------
+loadGame();
+</script>
+
+</body>
+</html>
