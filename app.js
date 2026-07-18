@@ -139,10 +139,10 @@ function formatPaybackTime(seconds) {
 
 function cpsEfficiencyRow(cost, diff) {
   if (diff <= 0) {
-    return `<div class="tooltip-row tooltip-efficiency"><span>⏱ 回収時間</span><span>—</span></div>`;
+    return `<div class="tooltip-row tooltip-efficiency"><span>⏱ コスト回収時間</span><span>—</span></div>`;
   }
   const paybackSeconds = cost / diff;
-  return `<div class="tooltip-row tooltip-efficiency"><span>⏱ 回収時間</span><span>${formatPaybackTime(paybackSeconds)}</span></div>`;
+  return `<div class="tooltip-row tooltip-efficiency"><span>⏱ コスト回収時間</span><span>${formatPaybackTime(paybackSeconds)}</span></div>`;
 }
 
 function unitEfficiencyRow(cost, diff) {

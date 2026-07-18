@@ -1,8 +1,13 @@
-* { box-sizing: border-box; }
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  height: 100%;
+}
 
 body {
   margin: 0;
   overflow: hidden;
+  overscroll-behavior: none;
   font-family: "Segoe UI", "Hiabino Kaku Gothic ProN", sans-serif;
 }
 
@@ -10,6 +15,7 @@ body {
   position: relative;
   width: 100vw;
   height: 100vh;
+  height: 100dvh; /* dynamic viewport height, avoids mobile browser UI jump */
   background: linear-gradient(
     180deg,
     #ffd865 0%,
@@ -99,9 +105,14 @@ body {
   width: 100%;
   height: 100%;
   display: flex;
+  user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  -webkit-touch-callout: none;
 }
 .click-area {
   flex: 1.1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -111,21 +122,23 @@ body {
 }
 
 .count {
-  font-size: 2.8rem;
+  font-size: clamp(1.6rem, 5vw, 2.8rem);
   font-weight: 800;
   color: #2c5f8d;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+  text-align: center;
 }
 
 .count-sub {
   color: #666;
   margin-bottom: 24px;
-  font-size: 0.95rem;
+  font-size: clamp(0.8rem, 2.2vw, 0.95rem);
+  text-align: center;
 }
 
 .popkun-btn {
-  width: 320px;
-  height: 230px;
+  width: clamp(160px, 34vw, 320px);
+  height: clamp(115px, 24vw, 230px);
   border: none;
   background: none;
   cursor: pointer;
@@ -134,6 +147,7 @@ body {
   justify-content: center;
   padding: 0;
   outline: none;
+  touch-action: manipulation;
   transition: transform 0.08s, filter 0.08s;
 }
 
@@ -146,8 +160,8 @@ body {
 }
 
 .popkun-image {
-  width: 320px;
-  height: 230px;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.08));
 }
@@ -181,15 +195,18 @@ body {
 .cps-info {
   margin-top: 24px;
   color: #666;
-  font-size: 0.95rem;
+  font-size: clamp(0.8rem, 2.2vw, 0.95rem);
   text-align: center;
 }
 
 .shop {
   width: 380px;
+  flex-shrink: 0;
   background: rgba(255, 255, 255, 0.9);
   padding: 16px;
+  padding-bottom: calc(16px + env(safe-area-inset-bottom));
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
   border-left: none;
 }
 
@@ -209,7 +226,8 @@ body {
 
 .tab-btn {
   flex: 1;
-  padding: 8px;
+  padding: 10px 8px;
+  min-height: 44px;
   background: transparent;
   border: 2px solid #4b8bea;
   border-bottom: 2px solid #4b8bea;
@@ -217,6 +235,7 @@ body {
   border-radius: 4px 4px 0 0;
   cursor: pointer;
   font-weight: bold;
+  touch-action: manipulation;
   transition: background 0.15s, color 0.15s;
 }
 
@@ -236,11 +255,13 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  min-height: 44px;
   background: #fafafa;
   border: 2px solid #e0e0e0;
   border-radius: 8px;
   padding: 10px 12px;
   cursor: pointer;
+  touch-action: manipulation;
   transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
 }
 
@@ -331,7 +352,7 @@ body {
   position: fixed;
   z-index: 999;
   min-width: 200px;
-  max-width: 260px;
+  max-width: min(260px, 80vw);
   background: #2c2c2c;
   color: #f5f5f5;
   border-radius: 8px;
@@ -390,11 +411,13 @@ body {
 
 .footer-buttons button {
   flex: 1;
-  padding: 8px;
+  padding: 10px 8px;
+  min-height: 44px;
   border: 2px solid #4b8bea;
   border-radius: 6px;
   cursor: pointer;
   font-weight: bold;
+  touch-action: manipulation;
   transition: background 0.15s, color 0.15s;
 }
 
@@ -423,14 +446,20 @@ body {
 
 .achievement-toast-container {
   position: fixed;
-  top: 24px;
+  top: calc(24px + env(safe-area-inset-top));
   left: 50%;
   transform: translateX(-50%);
   z-index: 1000;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  align-items: center;
+  width: min(92vw, 420px);
   pointer-events: none;
+}
+
+.achievement-toast {
+  width: 100%;
 }
 
 .achievement-toast {
@@ -562,4 +591,93 @@ body {
 
 .save-status.saved {
   color: #5ad864;
+}
+
+/* =========================================================
+   レスポンシブ対応（スマホ・タブレット向け）
+   ---------------------------------------------------------
+   ・~900px : 装飾の虹を控えめに
+   ・~760px : クリックエリアと購買部を縦積みに、購買部だけ
+              スクロールさせてクリックエリアは常に見える状態を保つ
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .rainbow { opacity: 0.85; }
+  .band { height: 76px; }
+}
+
+@media (max-width: 760px) {
+  .panel {
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    transform: none;
+  }
+
+  .rainbow { display: none; }
+
+  .bottom-line,
+  .bottom { display: none; }
+
+  .game {
+    flex-direction: column;
+  }
+
+  .click-area {
+    flex: 0 0 auto;
+    height: 42vh;
+    height: 42dvh;
+    min-height: 220px;
+    padding: 12px 16px;
+    padding-top: calc(12px + env(safe-area-inset-top));
+  }
+
+  .count { font-size: clamp(1.4rem, 7vw, 2rem); }
+  .count-sub { margin-bottom: 12px; }
+  .cps-info { margin-top: 12px; }
+
+  .popkun-btn {
+    width: clamp(150px, 46vw, 240px);
+    height: clamp(108px, 33vw, 172px);
+  }
+
+  .shop {
+    width: 100%;
+    flex: 1 1 auto;
+    min-height: 0;
+    padding: 12px;
+    padding-bottom: calc(12px + env(safe-area-inset-bottom));
+    border-top: 3px solid #4b8bea;
+  }
+
+  .shop h2 {
+    font-size: 1rem;
+    margin: 0 0 8px;
+  }
+
+  .item-icon-image {
+    width: 40px;
+    height: 40px;
+  }
+
+  .item-name { font-size: 0.9rem; }
+  .item-desc { font-size: 0.72rem; }
+
+  .achievement-toast-container {
+    top: calc(12px + env(safe-area-inset-top));
+  }
+}
+
+@media (max-width: 400px) {
+  .click-area { height: 38vh; height: 38dvh; min-height: 190px; }
+  .popkun-btn {
+    width: clamp(130px, 50vw, 200px);
+    height: clamp(94px, 36vw, 144px);
+  }
+}
+
+/* タッチ操作時は hover 依存のツールチップを無効化し、誤操作を防ぐ */
+@media (hover: none) {
+  .item-tooltip { display: none !important; }
 }
