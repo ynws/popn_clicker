@@ -68,10 +68,18 @@
         <span class="stat-value" id="statGeneratorTotal">0</span>
       </div>
 
-      <div class="section-label">⭐ 強化一覧</div>
+      <div class="section-label collapsible" id="upgradeSectionHeader" data-target="ownedUpgradeList">
+        <span class="section-label-text">⭐ 強化一覧</span>
+        <span class="section-rate" id="upgradeSectionRate"></span>
+        <span class="section-toggle-arrow">▾</span>
+      </div>
       <div class="item-list" id="ownedUpgradeList"></div>
 
-      <div class="section-label">🏆 実績</div>
+      <div class="section-label collapsible" id="achievementSectionHeader" data-target="achievementList">
+        <span class="section-label-text">🏆 実績</span>
+        <span class="section-rate" id="achievementSectionRate"></span>
+        <span class="section-toggle-arrow">▾</span>
+      </div>
       <div class="stat-row achievement-bonus-row">
         <span class="stat-label achievement-bonus-text" id="achievementBonusText"></span>
       </div>

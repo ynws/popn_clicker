@@ -25,6 +25,10 @@ const achievementList = document.getElementById("achievementList");
 const achievementBonusText = document.getElementById("achievementBonusText");
 const achievementToastContainer = document.getElementById("achievementToastContainer");
 const itemTooltip = document.getElementById("itemTooltip");
+const upgradeSectionHeader = document.getElementById("upgradeSectionHeader");
+const upgradeSectionRate = document.getElementById("upgradeSectionRate");
+const achievementSectionHeader = document.getElementById("achievementSectionHeader");
+const achievementSectionRate = document.getElementById("achievementSectionRate");
 
 const popkunBtn = document.getElementById("popkunBtn");
 const clickArea = document.getElementById("clickArea");

@@ -136,6 +136,11 @@ function renderStats() {
   const generatorTotal = GENERATOR_DEFS.reduce((sum, def) => sum + state.generators[def.id].level, 0);
   statGeneratorTotal.textContent = formatNumber(generatorTotal);
 
+  const upgradeRate = UPGRADE_DEFS.length > 0
+    ? Math.round((state.upgradesOwned.length / UPGRADE_DEFS.length) * 100)
+    : 0;
+  upgradeSectionRate.textContent = `${upgradeRate}%取得済み`;
+
   ownedUpgradeList.innerHTML = "";
   if (state.upgradesOwned.length === 0) {
     ownedUpgradeList.innerHTML = `<div class="item owned-summary">まだ強化したキャラクターはいません</div>`;
@@ -164,6 +169,11 @@ function renderAchievements() {
   const lockedCount = ACHIEVEMENT_DEFS.length - unlockedCount;
   const bonusPercent = Math.round(achievementBonusRate() * 100);
   achievementBonusText.textContent = `実績解除数 ${unlockedCount}：毎秒のノーツ生産数に${bonusPercent}%のボーナスが付くよ`;
+
+  const achievementRate = ACHIEVEMENT_DEFS.length > 0
+    ? Math.round((unlockedCount / ACHIEVEMENT_DEFS.length) * 100)
+    : 0;
+  achievementSectionRate.textContent = `${achievementRate}%取得済み`;
 
   if (unlockedCount === 0) {
     achievementList.innerHTML = `<div class="item owned-summary">まだ解除した実績はありません</div>`;

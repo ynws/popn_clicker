@@ -24,6 +24,17 @@ document.querySelectorAll(".tab-btn").forEach(btn => {
 
 document.getElementById("saveBtn").addEventListener("click", () => saveGame(false));
 
+// 記録タブ内の「強化一覧」「実績」セクションの折りたたみ
+document.querySelectorAll(".section-label.collapsible").forEach(header => {
+  const target = document.getElementById(header.dataset.target);
+  if (!target) return;
+  header.addEventListener("click", () => {
+    const collapsed = header.classList.toggle("collapsed");
+    target.classList.toggle("collapsed", collapsed);
+  });
+});
+
+
 document.getElementById("resetBtn").addEventListener("click", async () => {
   if (!confirm("本当にデータをリセットしますか？この操作は取り消せません。")) return;
   state.notesCount = 0;

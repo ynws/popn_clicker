@@ -541,6 +541,42 @@ body {
   margin-top: 0; 
 }
 
+.section-label.collapsible {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  user-select: none;
+  touch-action: manipulation;
+}
+
+.section-label.collapsible .section-label-text {
+  flex: 1;
+}
+
+.section-label.collapsible .section-rate {
+  font-size: 0.75rem;
+  font-weight: bold;
+  color: #4b8bea;
+  background: #e8f0ff;
+  border-radius: 10px;
+  padding: 2px 8px;
+}
+
+.section-label.collapsible .section-toggle-arrow {
+  font-size: 0.75rem;
+  color: #4b8bea;
+  transition: transform 0.15s;
+}
+
+.section-label.collapsible.collapsed .section-toggle-arrow {
+  transform: rotate(-90deg);
+}
+
+.item-list.collapsed {
+  display: none;
+}
+
 .achievement-row {
   display: flex;
   align-items: center;
