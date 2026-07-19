@@ -751,5 +751,8 @@ body {
     cursor: pointer;
     touch-action: manipulation;
   }
-}
 
+  .tooltip-margin {
+    height: 192px;
+  }
+}
