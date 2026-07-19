@@ -44,9 +44,13 @@ function renderGenerators() {
         buyGenerator(def);
         if (isTouchLayout()) showGeneratorTooltip(def, e.clientX, e.clientY);
       });
-      el.addEventListener("mouseenter", (e) => showGeneratorTooltip(def, e.clientX, e.clientY));
-      el.addEventListener("mousemove", (e) => showGeneratorTooltip(def, e.clientX, e.clientY));
-      el.addEventListener("mouseleave", hideItemTooltip);
+      // タッチ環境ではタップ後にブラウザが互換用のmouseenter/mousemove/mouseleaveを
+      // 発生させることがあり、これに反応するとタップ直後にツールチップが
+      // 閉じてしまう（＝その場所が反応しないように見える）ため、
+      // これらはhoverが使える環境（PC）でのみ有効にする。
+      el.addEventListener("mouseenter", (e) => { if (!isTouchLayout()) showGeneratorTooltip(def, e.clientX, e.clientY); });
+      el.addEventListener("mousemove", (e) => { if (!isTouchLayout()) showGeneratorTooltip(def, e.clientX, e.clientY); });
+      el.addEventListener("mouseleave", () => { if (!isTouchLayout()) hideItemTooltip(); });
       generatorList.appendChild(el);
     });
     if (lockedCount > 0) {
@@ -101,9 +105,10 @@ function renderUpgrades() {
           buyUpgrade(def);
           if (isTouchLayout()) showUpgradeTooltip(def, e.clientX, e.clientY);
         });
-        el.addEventListener("mouseenter", (e) => showUpgradeTooltip(def, e.clientX, e.clientY));
-        el.addEventListener("mousemove", (e) => showUpgradeTooltip(def, e.clientX, e.clientY));
-        el.addEventListener("mouseleave", hideItemTooltip);
+        // generator側と同様、タッチ環境ではhoverリスナーを無効化する
+        el.addEventListener("mouseenter", (e) => { if (!isTouchLayout()) showUpgradeTooltip(def, e.clientX, e.clientY); });
+        el.addEventListener("mousemove", (e) => { if (!isTouchLayout()) showUpgradeTooltip(def, e.clientX, e.clientY); });
+        el.addEventListener("mouseleave", () => { if (!isTouchLayout()) hideItemTooltip(); });
         upgradeList.appendChild(el);
       });
       if (lockedCount > 0) {
